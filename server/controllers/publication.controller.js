@@ -28,9 +28,14 @@ class PublicationController {
     }
     async findOne (req, res) {
         let id = req.params.id;
-        this.publicationService.findOne(id)
-            .then(data => this.findOneOK(data, res))
-            .catch(error => this.onError(error, res));
+        let authorId = req.params.authorId;
+        if (id && authorId) {
+            this.publicationService.findOne(id, authorId)
+                .then(data => this.findOneOK(data, res))
+                .catch(error => this.onError(error, res));
+        } else {
+            return res.status(422).json({ errors: ["id or authorId doesn't exists."] });
+        }
     }
     findOneOK(data, res){
         if (data.status != 200){
@@ -58,7 +63,7 @@ class PublicationController {
             return res.status(422).json({ errors: errors.array() });
         }
         let publication = new Publication(req.body);
-        this.publicationService.update(publication)
+        this.publicationService.update(publication, req.body.authorId)
             .then(data => this.updateOK(data, res))
             .catch(error => this.onError(error, res));
     }
@@ -67,9 +72,14 @@ class PublicationController {
     }
     async delete (req, res) {
         let id = req.params.id;
-        this.publicationService.delete(id)
-            .then(data => this.deleteOK(data, res))
-            .catch(error => this.onError(error, res));
+        let authorId = req.params.authorId;
+        if (id && authorId) {
+            this.publicationService.delete(id, authorId)
+                .then(data => this.deleteOK(data, res))
+                .catch(error => this.onError(error, res));
+        } else {
+            return res.status(422).json({ errors: ["id or authorId doesn't exists."] });
+        }
     }
     deleteOK (data, res) {
         res.status(data.status).json({message: "Delete OK"});
@@ -86,7 +96,7 @@ class PublicationController {
             case 'update': {
                 return [ 
                     body('id', "id doesn't exists").exists(),
-                    body('id', 'Invalid id').isInt(),
+                    body('authorId', "authorId doesn't exists").exists(),
                     body('body', "body doesn't exists").exists(),
                     body('title', "Title doesn't exists").exists()
                 ];   

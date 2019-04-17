@@ -19,9 +19,9 @@ app.post('/author', authorController.validate('create'), (req, res) => authorCon
 app.put('/author', authorController.validate('update'), (req, res) => authorController.update(req, res));
 
 app.get('/publication', (req, res) => publicationController.findAll(req, res));
-app.get('/publication/:id', (req, res) => publicationController.findOne(req, res));
+app.get('/publication/find/:id/:authorId', (req, res) => publicationController.findOne(req, res));
 app.get('/publication/author/:authorId', (req, res) => publicationController.findAllByAuthor(req, res));
-app.delete('/publication/:id', (req, res) => publicationController.delete(req, res));
+app.delete('/publication/:id/:authorId', (req, res) => publicationController.delete(req, res));
 app.post('/publication', publicationController.validate('create'), (req, res) => publicationController.create(req, res));
 app.put('/publication', publicationController.validate('update'), (req, res) => publicationController.update(req, res));
 

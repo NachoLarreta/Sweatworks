@@ -15,11 +15,17 @@ class PublicationService {
         try {
             const params = {
                 TableName: AUTHOR_TABLE,
-                KeyConditionExpression: "id = :id",
-                ExpressionAttributeValues: {
-                    ":id": authorId
+                KeyConditionExpression: "id = :authorId",
+                ProjectionExpression: "#publications, #id, #name, #email",
+                ExpressionAttributeNames: {
+                    '#publications': 'publications',
+                    '#id': 'id',
+                    '#name': 'name',
+                    '#email': 'email'
                 },
-                ProjectionExpression: "publications, id, name, email"
+                ExpressionAttributeValues: {
+                    ":authorId": authorId
+                }
             };
             let result = await instance.query(params).promise();
             const {Items} = result;
@@ -75,15 +81,24 @@ class PublicationService {
                 TableName: AUTHOR_TABLE,
                 KeyConditionExpression: "id = :authorId",
                 FilterExpression: "publications[0].id = :id",
+                ProjectionExpression: "#publications, #id, #name, #email",
                 ExpressionAttributeValues: {
-                    ":authorId": authorId,
-                    ":id": id
+                    ":id": id,
+                    ":authorId": authorId
                 },
-                ProjectionExpression: "publications, id, name, email"
+                ExpressionAttributeNames: {
+                    '#publications': 'publications',
+                    '#id': 'id',
+                    '#name': 'name',
+                    '#email': 'email'
+                }
             };
             let result = await instance.query(params).promise();
-            const {Item} = result;
-            let publication = this.mapPublication(Item);
+            const {Items} = result;
+            let publication;
+            if (Items && Items.length > 0) {
+                publication = this.mapPublication(Items[0]);
+            }
             if (!publication) {
                 return Promise.resolve({
                     status: 404,
@@ -137,16 +152,24 @@ class PublicationService {
             return Promise.reject(response);
         }
     }
-    async update (publication) {
+    async update (publication, authorId) {
         try {
             const params = {
-                TableName: PUBLICATIONS_TABLE,
-                KeyConditionExpression: "id = :id",
-                UpdateExpression: "SET title = :title, body = :body",
+                TableName: AUTHOR_TABLE,
+                Key: {id: authorId},
+                ConditionExpression: "#publications[0].#id = :id",
+                UpdateExpression: "SET #publications[0].#title = :title, #publications[0].#body = :body",
                 ExpressionAttributeValues: { 
                     ":id": publication.id,
                     ":title": publication.title,
                     ":body": publication.body
+                },
+                ExpressionAttributeNames: {
+                    '#publications': 'publications',
+                    '#id': 'id',
+                    '#title': 'title',
+                    '#body': 'body'
+
                 }
             };
             let result = await instance.update(params).promise();
@@ -161,13 +184,18 @@ class PublicationService {
             });
         }
     }
-    async delete (id) {
+    async delete (id, authorId) {
         try {
             const params = {
-                TableName: PUBLICATIONS_TABLE,
-                Key: { id }
-            }
-            let result = await instance.delete(params).promise();
+                TableName: AUTHOR_TABLE,
+                Key: {id: authorId},
+                FilterExpression: "publications[0].id = :id",
+                UpdateExpression: "REMOVE publications[0]",
+                ExpressionAttributeValues: { 
+                    ":id": id
+                }
+            };
+            let result = await instance.update(params).promise();
             return Promise.resolve({
                 status: 200
             });
