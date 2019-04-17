@@ -1,0 +1,30 @@
+{
+  "name": "server-sw-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "deploy": "",
+    "offline": "sls offline start",
+    "test": "node ./tests/index.js",
+    "debug": "SET SLS_DEBUG=* && node --inspect %USERPROFILE%\\AppData\\Roaming\\npm\\node_modules\\serverless\\bin\\serverless offline start"
+  },
+  "keywords": [],
+  "author": "Ignacio Larreta",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.429.0",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "express-validator": "^5.3.1",
+    "serverless-http": "^1.9.1",
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "serverless-dynamodb-local": "^0.2.36",
+    "serverless-mocha-plugin": "^1.10.0",
+    "serverless-offline": "^4.9.2",
+    "serverless-plugin-include-dependencies": "^3.2.1",
+    "supertest": "^4.0.2"
+  }
+}

@@ -1,0 +1,58 @@
+service: sw-project 
+
+custom: 
+  authorTableName: 'author-table-${self:provider.stage}'
+  dynamodb:
+    start:
+      migrate: true
+      port: 15002
+
+plugins: 
+  - serverless-dynamodb-local
+  - serverless-offline
+  - serverless-plugin-include-dependencies
+  - serverless-mocha-plugin
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  stage: dev
+  iamRoleStatements:
+    - Effect: Allow
+      Action: 
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource:
+        - { "Fn::GetAtt": ["AuthorTable","Arn"] }
+  environment:
+    AUTHOR_TABLE: ${self:custom.authorTableName}
+
+functions:
+  app:
+    handler: handler.generic
+    events: 
+      - http: ANY /
+      - http: ANY {proxy+}
+
+resources:
+  Resources:
+    AuthorTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties: 
+        AttributeDefinitions:
+          - 
+            AttributeName: id
+            AttributeType: S
+        KeySchema:
+          - 
+            AttributeName: id
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:custom.authorTableName}
+    
