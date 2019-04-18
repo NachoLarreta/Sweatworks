@@ -25,7 +25,8 @@ class PublicationService {
                 },
                 ExpressionAttributeValues: {
                     ":authorId": authorId
-                }
+                },
+                Limit: 1
             };
             let result = await instance.query(params).promise();
             const {Items} = result;
@@ -55,14 +56,16 @@ class PublicationService {
                     '#id': 'id',
                     '#name': 'name',
                     '#email': 'email'
-                }
+                },
+                Limit: 1
             };
             let result = await instance.scan(params).promise();
             const {Items} = result;
             let publications = this.mapPublications(Items);
             let response = {
                 status: 200,
-                publications
+                publications,
+                exclusiveStartKey: result.LastEvaluatedKey
             };
             return Promise.resolve(response);
         } catch (error){
@@ -91,7 +94,8 @@ class PublicationService {
                     '#id': 'id',
                     '#name': 'name',
                     '#email': 'email'
-                }
+                },
+                Limit: 1
             };
             let result = await instance.query(params).promise();
             const {Items} = result;

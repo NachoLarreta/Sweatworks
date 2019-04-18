@@ -1,0 +1,8 @@
+{
+    "/*": {
+      "target": "https://urlfbd",
+      "secure": false,
+      "logLevel": "debug",
+      "changeOrigin": true
+    }
+  }

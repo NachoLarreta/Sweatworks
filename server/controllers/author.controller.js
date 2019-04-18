@@ -10,12 +10,16 @@ class AuthorController {
     }
 
     async findAll (req, res) {
-        this.authorService.findAll()
+        let exclusiveStartKey = req.query.exclusiveStartKey;
+        let limit = req.query.limit;
+        let sortBy = req.query.sortBy;
+        let orderType = req.query.orderType;
+        this.authorService.findAll(exclusiveStartKey, limit, sortBy, orderType)
             .then(data => this.findAllOK(data, res))
             .catch(error => this.onError(error, res));
     }
     findAllOK(data, res){
-        res.status(data.status).json(data.authors);
+        res.status(data.status).json(data);
     }
     async findOne (req, res) {
         let id = req.params.id;

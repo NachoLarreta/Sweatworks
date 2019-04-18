@@ -47,10 +47,34 @@ resources:
           - 
             AttributeName: id
             AttributeType: S
+          - 
+            AttributeName: name
+            AttributeType: S
+          - 
+            AttributeName: publications[0].date
+            AttributeType: N
         KeySchema:
           - 
             AttributeName: id
             KeyType: HASH
+          - 
+            AttributeName: name
+            KeyType: RANGE
+        GlobalSecondaryIndexes: 
+          - 
+            IndexName: publicationsIndex
+            KeySchema:
+              - 
+                AttributeName: id
+                KeyType: HASH
+              - 
+                AttributeName: publications[0].date
+                KeyType: RANGE
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 1
+              WriteCapacityUnits: 1
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1

@@ -5,9 +5,18 @@ const { instance, AUTHOR_TABLE } = require("./dynamodb.service");
 const { Author } = require("../models/author.model");
 
 class AuthorService {
-    async findAll () {
+    async findAll (exclusiveStartKey, limit, sortBy, orderType) {
         try {
-            const params = {
+            if (!limit) {
+                limit = 10;
+            }
+            if (!sortBy) {
+                sortBy = "date";
+            }
+            if (!orderType) {
+                orderType = "asc";
+            }
+            let params = {
                 TableName: AUTHOR_TABLE,
                 ProjectionExpression: "#id, #name, #email, #dateOfBirth",
                 ExpressionAttributeNames: {
@@ -15,13 +24,20 @@ class AuthorService {
                     '#name': 'name',
                     '#email': 'email',
                     '#dateOfBirth': 'dateOfBirth'
-                }
+                },
+                Limit: limit
             };
+            if (exclusiveStartKey){
+                params = {...params, ExclusiveStartKey: { id: exclusiveStartKey }};
+            }
             let result = await instance.scan(params).promise();
             const {Items} = result;
+            const {LastEvaluatedKey} = result;
+
             let response = {
                 status: 200,
-                authors: Items
+                authors: Items,
+                exclusiveStartKey: LastEvaluatedKey
             };
             return Promise.resolve(response);
         } catch (error){
