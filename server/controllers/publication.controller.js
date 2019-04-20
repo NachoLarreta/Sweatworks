@@ -68,7 +68,7 @@ class PublicationController {
             return res.status(422).json({ errors: errors.array() });
         }
         let publication = new Publication(req.body);
-        this.publicationService.update(publication, req.body.authorId)
+        this.publicationService.update(publication)
             .then(data => this.updateOK(data, res))
             .catch(error => this.onError(error, res));
     }

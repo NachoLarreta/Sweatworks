@@ -234,6 +234,7 @@ class PublicationService {
     }
     async update (publication) {
         try {
+            let id = publication.id;
             const params = {
                 TableName: MAIN_TABLE,
                 Key: {id, entity: PUBLICATIONS},
