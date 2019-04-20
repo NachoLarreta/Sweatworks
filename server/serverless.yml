@@ -16,7 +16,12 @@ plugins:
 provider:
   name: aws
   runtime: nodejs8.10
-  stage: dev
+  stage: ${opt:stage, 'dev'}
+  profile: sw-project
+  region: us-east-1
+  apiKeys:
+    - ${file(./config.${self:provider.stage}.json):API_KEY}
+
   iamRoleStatements:
     - Effect: Allow
       Action: 
@@ -35,8 +40,14 @@ functions:
   app:
     handler: handler.generic
     events: 
-      - http: ANY /
-      - http: ANY {proxy+}
+      - http: 
+          path: /
+          method: ANY
+          private: true
+      - http: 
+          path: /{proxy+}
+          method: ANY
+          private: true
 
 resources:
   Resources:

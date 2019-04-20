@@ -11,7 +11,7 @@ class PublicationService {
         this.authorService = new AuthorService();
     }
 
-    async findAllByAuthor (authorId, exclusiveStartKey, limit, orderType) {
+    async findAllByAuthor (authorId, exclusiveStartKey, limit, orderType, search) {
         try {
             if (!limit) {
                 limit = 10;
@@ -28,20 +28,33 @@ class PublicationService {
                 filterExpression = "#date > :date AND #authorId = :authorId";
                 dateFilter = new Date(new Date().setFullYear(new Date().getFullYear() - 10)).getTime();
             }
+            let expressionAttributeNames = {
+                '#authorId': 'authorId',
+                '#date': 'date',
+                '#entity': 'entity'
+            };
+            let expressionAttributeValues = {
+                ":authorId": authorId,
+                ":date": dateFilter,
+                ":entity": PUBLICATIONS
+            };
+            if (search) {
+                filterExpression += "AND contains(#title, :title)";
+                let attributeName = {
+                    '#title': 'title'
+                };
+                expressionAttributeNames = { ...expressionAttributeNames, ...attributeName };
+                let attributeValue = {
+                    ':title': search
+                };
+                expressionAttributeValues = { ...expressionAttributeValues, ...attributeValue };
+            }
             let params = {
                 TableName: MAIN_TABLE,
                 KeyConditionExpression: "#entity = :publications",
                 FilterExpression: filterExpression,
-                ExpressionAttributeNames: {
-                    '#authorId': 'authorId',
-                    '#date': 'date',
-                    '#entity': 'entity'
-                },
-                ExpressionAttributeValues: {
-                    ":authorId": authorId,
-                    ":date": dateFilter,
-                    ":entity": PUBLICATIONS
-                },
+                ExpressionAttributeNames: expressionAttributeNames,
+                ExpressionAttributeValues: expressionAttributeValues,
                 ScanIndexForward: (orderType == "asc"),
                 Limit: limit
             };
@@ -66,6 +79,75 @@ class PublicationService {
             };
             return Promise.reject(response);
         }
+    }
+
+    async findAll (exclusiveStartKey, limit, orderType, search) {
+        try {
+            if (!limit) {
+                limit = 10;
+            }
+            if (!orderType) {
+                orderType = "asc";
+            }
+            let filterExpression;
+            let dateFilter;
+            if (orderType == "asc") {
+                filterExpression = "#date < :date";
+                dateFilter = new Date().getTime();
+            } else {
+                filterExpression = "#date > :date";
+                dateFilter = new Date(new Date().setFullYear(new Date().getFullYear() - 10)).getTime();
+            }
+            let expressionAttributeNames = {
+                '#date': 'date',
+                '#entity': 'entity'
+            };
+            let expressionAttributeValues = {
+                ":date": dateFilter,
+                ":publications": PUBLICATIONS
+            };
+            if (search) {
+                filterExpression += "AND contains(#title, :title)";
+                let attributeName = {
+                    '#title': 'title'
+                };
+                expressionAttributeNames = { ...expressionAttributeNames, ...attributeName };
+                let attributeValue = {
+                    ':title': search
+                };
+                expressionAttributeValues = { ...expressionAttributeValues, ...attributeValue };
+            }
+            let params = {
+                TableName: MAIN_TABLE,
+                KeyConditionExpression: "#entity = :publications",
+                FilterExpression: filterExpression,
+                ExpressionAttributeNames: expressionAttributeNames,
+                ExpressionAttributeValues: expressionAttributeValues,
+                ScanIndexForward: (orderType == "asc"),
+                Limit: limit
+            };
+            if (exclusiveStartKey){
+                params = {...params, ExclusiveStartKey: { id: exclusiveStartKey }};
+            }
+            let result = await instance.query(params).promise();
+            const {Items} = result;
+            const {LastEvaluatedKey} = result;
+            let publications = await this.loadAuthors(Items);
+            let response = {
+                status: 200,
+                publications,
+                exclusiveStartKey: LastEvaluatedKey
+            };
+            return Promise.resolve(response);
+        } catch (error){
+            console.log(error);
+            let response = {
+                status: 500,
+                message: "Could not load publications."
+            };
+            return Promise.reject(response);
+        }
+        
     }
 
     async loadAuthors(publications){
@@ -106,61 +188,6 @@ class PublicationService {
         }
     }
 
-    async findAll (exclusiveStartKey, limit, orderType) {
-        try {
-            if (!limit) {
-                limit = 10;
-            }
-            if (!orderType) {
-                orderType = "asc";
-            }
-            let filterExpression;
-            let dateFilter;
-            if (orderType == "asc") {
-                filterExpression = "#date < :date";
-                dateFilter = new Date().getTime();
-            } else {
-                filterExpression = "#date > :date";
-                dateFilter = new Date(new Date().setFullYear(new Date().getFullYear() - 10)).getTime();
-            }
-            let params = {
-                TableName: MAIN_TABLE,
-                KeyConditionExpression: "#entity = :publications",
-                FilterExpression: filterExpression,
-                ExpressionAttributeNames: {
-                    '#date': 'date',
-                    '#entity': 'entity'
-                },
-                ExpressionAttributeValues: {
-                    ":date": dateFilter,
-                    ":publications": PUBLICATIONS
-                },
-                ScanIndexForward: (orderType == "asc"),
-                Limit: limit
-            };
-            if (exclusiveStartKey){
-                params = {...params, ExclusiveStartKey: { id: exclusiveStartKey }};
-            }
-            let result = await instance.query(params).promise();
-            const {Items} = result;
-            const {LastEvaluatedKey} = result;
-            let publications = await this.loadAuthors(Items);
-            let response = {
-                status: 200,
-                publications,
-                exclusiveStartKey: LastEvaluatedKey
-            };
-            return Promise.resolve(response);
-        } catch (error){
-            console.log(error);
-            let response = {
-                status: 500,
-                message: "Could not load publications."
-            };
-            return Promise.reject(response);
-        }
-        
-    }
     async findOne (id) {
         try {
             let params = {

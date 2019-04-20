@@ -1,3 +1,3 @@
-import { Example } from './actions';
+import { UpdateListAuthors, UpdateListPublications, UpdateSearch, UpdateAscendingOrderDate, UpdateAuthorSelect } from './actions';
 
-export type GlobalActions = Example;
+export type GlobalActions = UpdateListAuthors | UpdateListPublications | UpdateSearch | UpdateAscendingOrderDate | UpdateAuthorSelect;

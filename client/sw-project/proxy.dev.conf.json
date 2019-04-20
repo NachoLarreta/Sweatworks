@@ -1,8 +1,0 @@
-{
-    "/*": {
-      "target": "https://dev",
-      "secure": false,
-      "logLevel": "debug",
-      "changeOrigin": true
-    }
-  }

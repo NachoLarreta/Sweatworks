@@ -11,10 +11,11 @@ class PublicationController {
 
     async findAllByAuthor (req, res) {
         let authorId = req.params.authorId;
+        let search = req.query.search;
         let exclusiveStartKey = req.query.exclusiveStartKey;
         let limit = req.query.limit;
         let orderType = req.query.orderType;
-        this.publicationService.findAllByAuthor(authorId, exclusiveStartKey, limit, orderType)
+        this.publicationService.findAllByAuthor(authorId, exclusiveStartKey, limit, orderType, search)
             .then(data => this.findAllByAuthorOK(data, res))
             .catch(error => this.onError(error, res));
     }
@@ -23,9 +24,10 @@ class PublicationController {
     }
     async findAll (req, res) {
         let exclusiveStartKey = req.query.exclusiveStartKey;
+        let search = req.query.search;
         let limit = req.query.limit;
         let orderType = req.query.orderType;
-        this.publicationService.findAll(exclusiveStartKey, limit, orderType)
+        this.publicationService.findAll(exclusiveStartKey, limit, orderType, search)
             .then(data => this.findAllOK(data, res))
             .catch(error => this.onError(error, res));
     }

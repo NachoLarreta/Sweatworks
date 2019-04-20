@@ -4,7 +4,9 @@
   "description": "",
   "main": "handler.js",
   "scripts": {
-    "deploy": "",
+    "deploy-dev": "sls deploy --stage dev",
+    "deploy-qa": "sls deploy --stage qa",
+    "deploy-prod": "sls deploy --stage prod",
     "offline": "sls offline start",
     "test": "node ./tests/index.js",
     "debug": "SET SLS_DEBUG=* && node --inspect %USERPROFILE%\\AppData\\Roaming\\npm\\node_modules\\serverless\\bin\\serverless offline start"
