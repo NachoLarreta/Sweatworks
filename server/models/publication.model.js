@@ -7,6 +7,7 @@ class Publication {
         this.date = item.date;
         this.body = item.body;
         this.title = item.title;
+        this.authorId = item.authorId;
     }
 
     getValues() {
@@ -14,7 +15,8 @@ class Publication {
             id: this.id,
             date: this.date,
             body: this.body,
-            title: this.title
+            title: this.title,
+            authorId: this.authorId
         };
     }
 }

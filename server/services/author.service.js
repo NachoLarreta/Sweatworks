@@ -1,39 +1,37 @@
 'use strict';
 
 const uuid = require('uuid');
-const { instance, AUTHOR_TABLE } = require("./dynamodb.service");
+const { instance, MAIN_TABLE, AUTHORS } = require("./dynamodb.service");
 const { Author } = require("../models/author.model");
 
 class AuthorService {
-    async findAll (exclusiveStartKey, limit, sortBy, orderType) {
+    async findAll (exclusiveStartKey, limit) {
         try {
             if (!limit) {
                 limit = 10;
             }
-            if (!sortBy) {
-                sortBy = "date";
-            }
-            if (!orderType) {
-                orderType = "asc";
-            }
             let params = {
-                TableName: AUTHOR_TABLE,
+                TableName: MAIN_TABLE,
+                KeyConditionExpression: "#entity = :authors",
                 ProjectionExpression: "#id, #name, #email, #dateOfBirth",
                 ExpressionAttributeNames: {
                     '#id': 'id',
                     '#name': 'name',
                     '#email': 'email',
-                    '#dateOfBirth': 'dateOfBirth'
+                    '#dateOfBirth': 'dateOfBirth',
+                    '#entity': 'entity'
+                },
+                ExpressionAttributeValues: { 
+                    ":authors": AUTHORS
                 },
                 Limit: limit
             };
             if (exclusiveStartKey){
                 params = {...params, ExclusiveStartKey: { id: exclusiveStartKey }};
             }
-            let result = await instance.scan(params).promise();
+            let result = await instance.query(params).promise();
             const {Items} = result;
             const {LastEvaluatedKey} = result;
-
             let response = {
                 status: 200,
                 authors: Items,
@@ -52,8 +50,8 @@ class AuthorService {
     async findOne (id) {
         try {
             const params = {
-                TableName: AUTHOR_TABLE,
-                Key: {id},
+                TableName: MAIN_TABLE,
+                Key: {id, entity: AUTHORS},
                 ProjectionExpression: "#id, #name, #email, #dateOfBirth",
                 ExpressionAttributeNames: {
                     '#id': 'id',
@@ -87,11 +85,11 @@ class AuthorService {
     async create (author) {
         try {
             author.id = uuid.v1();
-            let publications = [];
+            let entity = AUTHORS;
             let authorValues = author.getValues();
-            authorValues = {...authorValues, publications}
+            authorValues = {...authorValues, entity}
             const params = {
-                TableName: AUTHOR_TABLE,
+                TableName: MAIN_TABLE,
                 Item: authorValues
             };
             let result = await instance.put(params).promise();
@@ -111,8 +109,8 @@ class AuthorService {
     async update (author) {
         try {
             const params = {
-                TableName: AUTHOR_TABLE,
-                Key: {id: author.id},
+                TableName: MAIN_TABLE,
+                Key: {id: author.id, entity: AUTHORS},
                 UpdateExpression: "SET #name = :name, #email = :email, #dateOfBirth = :dateOfBirth",
                 ExpressionAttributeValues: { 
                     ":name": author.name,
@@ -140,8 +138,8 @@ class AuthorService {
     async delete (id) {
         try {
             const params = {
-                TableName: AUTHOR_TABLE,
-                Key: { id }
+                TableName: MAIN_TABLE,
+                Key: { id, entity: AUTHORS }
             }
             let result = await instance.delete(params).promise();
             return Promise.resolve({

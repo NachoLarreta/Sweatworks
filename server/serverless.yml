@@ -1,7 +1,7 @@
 service: sw-project 
 
 custom: 
-  authorTableName: 'author-table-${self:provider.stage}'
+  mainTableName: 'main-table-${self:provider.stage}'
   dynamodb:
     start:
       migrate: true
@@ -27,9 +27,9 @@ provider:
         - dynamodb:UpdateItem
         - dynamodb:DeleteItem
       Resource:
-        - { "Fn::GetAtt": ["AuthorTable","Arn"] }
+        - { "Fn::GetAtt": ["MainTable","Arn"] }
   environment:
-    AUTHOR_TABLE: ${self:custom.authorTableName}
+    MAIN_TABLE: ${self:custom.mainTableName}
 
 functions:
   app:
@@ -40,43 +40,25 @@ functions:
 
 resources:
   Resources:
-    AuthorTable:
+    MainTable:
       Type: 'AWS::DynamoDB::Table'
       Properties: 
         AttributeDefinitions:
           - 
+            AttributeName: entity
+            AttributeType: S
+          - 
             AttributeName: id
             AttributeType: S
-          - 
-            AttributeName: name
-            AttributeType: S
-          - 
-            AttributeName: publications[0].date
-            AttributeType: N
         KeySchema:
           - 
-            AttributeName: id
+            AttributeName: entity
             KeyType: HASH
           - 
-            AttributeName: name
+            AttributeName: id
             KeyType: RANGE
-        GlobalSecondaryIndexes: 
-          - 
-            IndexName: publicationsIndex
-            KeySchema:
-              - 
-                AttributeName: id
-                KeyType: HASH
-              - 
-                AttributeName: publications[0].date
-                KeyType: RANGE
-            Projection:
-              ProjectionType: ALL
-            ProvisionedThroughput:
-              ReadCapacityUnits: 1
-              WriteCapacityUnits: 1
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
-        TableName: ${self:custom.authorTableName}
+        TableName: ${self:custom.mainTableName}
     

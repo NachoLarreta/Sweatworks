@@ -14,4 +14,6 @@ if (IS_OFFLINE === 'true') {
 }
 
 exports.instance = dynamoDB;
-exports.AUTHOR_TABLE = process.env.AUTHOR_TABLE;
+exports.MAIN_TABLE = process.env.MAIN_TABLE;
+exports.AUTHORS = "AUTHORS";
+exports.PUBLICATIONS = "PUBLICATIONS";

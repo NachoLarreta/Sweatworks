@@ -11,26 +11,31 @@ class PublicationController {
 
     async findAllByAuthor (req, res) {
         let authorId = req.params.authorId;
-        this.publicationService.findAllByAuthor(authorId)
+        let exclusiveStartKey = req.query.exclusiveStartKey;
+        let limit = req.query.limit;
+        let orderType = req.query.orderType;
+        this.publicationService.findAllByAuthor(authorId, exclusiveStartKey, limit, orderType)
             .then(data => this.findAllByAuthorOK(data, res))
             .catch(error => this.onError(error, res));
     }
     findAllByAuthorOK(data, res){
-        res.status(data.status).json(data.publications);
+        res.status(data.status).json(data);
     }
     async findAll (req, res) {
-        this.publicationService.findAll()
+        let exclusiveStartKey = req.query.exclusiveStartKey;
+        let limit = req.query.limit;
+        let orderType = req.query.orderType;
+        this.publicationService.findAll(exclusiveStartKey, limit, orderType)
             .then(data => this.findAllOK(data, res))
             .catch(error => this.onError(error, res));
     }
     findAllOK(data, res){
-        res.status(data.status).json(data.publications);
+        res.status(data.status).json(data);
     }
     async findOne (req, res) {
         let id = req.params.id;
-        let authorId = req.params.authorId;
-        if (id && authorId) {
-            this.publicationService.findOne(id, authorId)
+        if (id) {
+            this.publicationService.findOne(id)
                 .then(data => this.findOneOK(data, res))
                 .catch(error => this.onError(error, res));
         } else {
@@ -72,9 +77,8 @@ class PublicationController {
     }
     async delete (req, res) {
         let id = req.params.id;
-        let authorId = req.params.authorId;
-        if (id && authorId) {
-            this.publicationService.delete(id, authorId)
+        if (id) {
+            this.publicationService.delete(id)
                 .then(data => this.deleteOK(data, res))
                 .catch(error => this.onError(error, res));
         } else {
@@ -96,7 +100,6 @@ class PublicationController {
             case 'update': {
                 return [ 
                     body('id', "id doesn't exists").exists(),
-                    body('authorId', "authorId doesn't exists").exists(),
                     body('body', "body doesn't exists").exists(),
                     body('title', "Title doesn't exists").exists()
                 ];   
