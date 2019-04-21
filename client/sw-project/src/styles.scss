@@ -1,1 +1,63 @@
-/* You can add global styles to this file, and also import other style files */
+@font-face{
+    font-family: 'helvetica';
+    font-style: normal;
+    font-weight: normal;
+    src: url('assets/fonts/Helvetica/HelveticaWorld-Regular.ttf')
+}
+
+@font-face{
+    font-family: 'helvetica';
+    font-style: italic;
+    font-weight: normal;
+    src: url('assets/fonts/Helvetica/HelveticaWorld-Italic.ttf')
+}
+
+@font-face{
+    font-family: 'helvetica';
+    font-style: normal;
+    font-weight: bold;
+    src: url('assets/fonts/Helvetica/HelveticaWorld-Bold.ttf')
+}
+
+@font-face{
+    font-family: 'helvetica';
+    font-style: italic;
+    font-weight: bold;
+    src: url('assets/fonts/Helvetica/HelveticaWorld-BoldItalic.ttf')
+}
+
+@font-face{
+    font-family: 'helvetica';
+    font-style: normal;
+    font-weight: 400;
+    src: url('assets/fonts/Helvetica/HelveticaNeue.ttf')
+}
+
+@font-face{
+    font-family: 'helvetica';
+    font-style: normal;
+    font-weight: 300;
+    src: url('assets/fonts/Helvetica/HelveticaLight.ttf')
+}
+
+body {
+    font-family: 'helvetica';
+}
+
+@media (max-width: 500px) {
+    .desktop {
+        display: none;
+    }
+    .mobile {
+        display: initial;
+    }
+}
+
+@media (min-width: 501px) {
+    .desktop {
+        display: initial;
+    }
+    .mobile {
+        display: none;
+    }
+}

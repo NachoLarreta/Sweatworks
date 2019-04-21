@@ -1,0 +1,39 @@
+<p-virtualScroller [value]="authors" scrollHeight="500px" [itemSize]="150" [rows]="5" [cache]="true" 
+  [lazy]="true" (onLazyLoad)="loadAuthorsLazy($event)" [totalRecords]="10">
+    <ng-template let-author pTemplate="item" let-i="index">
+        <div class="ui-g author-item">
+            <div class="ui-g-12 ui-md-8">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-6">
+                        {{author.name}}
+                    </div>
+                    <div class="ui-g-12 ui-md-6">
+                        {{author.email}}
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-4">
+                {{author.dateOfBirth}}
+            </div>
+        </div>
+    </ng-template>
+    <ng-template let-author pTemplate="loadingItem">
+        <!-- <div class="ui-g car-item empty-car-item">
+            <div class="ui-g-12 ui-md-2">
+                <div class="empty-car-item-index"></div>
+            </div>
+            <div class="ui-g-12 ui-md-2">
+                <div class="empty-car-item-image"></div>
+            </div>
+            <div class="ui-g-12 ui-md-8">
+                <div class="ui-g">
+                    <div class="ui-g-12"><div class="empty-car-item-text"></div></div>
+                    <div class="ui-g-12"><div class="empty-car-item-text"></div></div>
+                    <div class="ui-g-12"><div class="empty-car-item-text"></div></div>
+                    <div class="ui-g-12"><div class="empty-car-item-text"></div></div>
+                </div>
+            </div>
+        </div> -->
+        loading
+    </ng-template>
+</p-virtualScroller>

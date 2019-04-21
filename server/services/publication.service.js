@@ -59,7 +59,7 @@ class PublicationService {
                 Limit: limit
             };
             if (exclusiveStartKey){
-                params = {...params, ExclusiveStartKey: exclusiveStartKey};
+                params = {...params, ExclusiveStartKey: {entity: PUBLICATIONS, id: exclusiveStartKey}};
             }
             let result = await instance.query(params).promise();
             const {Items} = result;
@@ -127,7 +127,7 @@ class PublicationService {
                 Limit: limit
             };
             if (exclusiveStartKey){
-                params = {...params, ExclusiveStartKey: { id: exclusiveStartKey }};
+                params = {...params, ExclusiveStartKey: { entity: PUBLICATIONS, id: exclusiveStartKey }};
             }
             let result = await instance.query(params).promise();
             const {Items} = result;

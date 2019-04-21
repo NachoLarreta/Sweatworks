@@ -27,7 +27,7 @@ class AuthorService {
                 Limit: limit
             };
             if (exclusiveStartKey){
-                params = {...params, ExclusiveStartKey: { id: exclusiveStartKey }};
+                params = {...params, ExclusiveStartKey: { entity: AUTHORS, id: exclusiveStartKey }};
             }
             let result = await instance.query(params).promise();
             const {Items} = result;

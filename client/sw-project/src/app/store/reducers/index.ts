@@ -5,9 +5,9 @@ import {
   createSelector,
   MetaReducer
 } from '@ngrx/store';
-import { environment } from '../../environments/environment';
-import { GlobalState } from './global/globalState.model';
-import { globalReducer } from './global/global.reducer';
+import { environment } from '../../../environments/environment';
+import { GlobalState } from '../models/globalState.model';
+import { globalReducer } from './global.reducer';
 
 export interface State {
   global: GlobalState

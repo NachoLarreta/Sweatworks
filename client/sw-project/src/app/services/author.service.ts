@@ -1,22 +1,25 @@
-import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { Author } from '../models/author.model';
 import { GenericService } from './generic.service';
+import { Store } from '@ngrx/store';
+import { State } from '../store/reducers';
+import { AuthorFilter } from '../models/authorFilter.model';
 
 @Injectable()
 export class AuthorService {
-
+    
     constructor(private genericService: GenericService) { 
     }
 
-    findAll(limit?: number, exclusiveStartKey?: string): Observable<any> {
+    findAll(authorFilter: AuthorFilter): Observable<any> {
         let params = new HttpParams();
-        if (limit){
-            params = params.append('limit', limit.toString());
+        if (authorFilter.limit){
+            params = params.append('limit', authorFilter.limit.toString());
         }
-        if (exclusiveStartKey){
-            params = params.append('exclusiveStartKey', exclusiveStartKey);
+        if (authorFilter.exclusiveStartKey){
+            params = params.append('exclusiveStartKey', authorFilter.exclusiveStartKey);
         }
         return this.genericService.get("/author", params);
     }

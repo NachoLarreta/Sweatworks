@@ -74,6 +74,14 @@
                   "with": "src/environments/environment.dev.ts"
                 }
               ]
+            },
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                }
+              ]
             }
           }
         },
@@ -85,6 +93,15 @@
           "configurations": {
             "production": {
               "browserTarget": "sw-project:build:production"
+            },
+            "qa": {
+              "browserTarget": "sw-project:build:qa"
+            },
+            "dev": {
+              "browserTarget": "sw-project:build:dev"
+            },
+            "local": {
+              "browserTarget": "sw-project:build:local"
             }
           }
         },
