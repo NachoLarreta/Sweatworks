@@ -10,7 +10,7 @@ export class GenericService {
 
     constructor(private http: HttpClient) { 
         this.headers = new HttpHeaders();
-        this.headers = this.headers.set('x-api-key', environment.API_KEY);
+        this.headers = this.headers.set('X-Api-Key', environment.API_KEY);
         this.headers = this.headers.set('Content-Type', 'application/json; charset=utf-8');
     }
 

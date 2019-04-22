@@ -46,22 +46,26 @@ body {
     font-family: 'helvetica';
     color: $colors-light;
     background-color: $colors-dark;
-}
-
-@media (max-width: 500px) {
-    .desktop {
-        display: none;
-    }
-    .mobile {
-        display: initial;
+    .ui-sidebar {
+        background-color: $colors-dark !important;
+        color: $colors-light !important;
     }
 }
 
-@media (min-width: 501px) {
+@media (max-width: 640px) {
+    .desktop {
+        display: none !important;
+    }
+    .mobile {
+        display: initial; 
+    }
+}
+
+@media (min-width: 641px) {
     .desktop {
         display: initial;
     }
     .mobile {
-        display: none;
+        display: none !important;
     }
 }

@@ -44,10 +44,12 @@ functions:
           path: /
           method: ANY
           private: true
+          cors: true
       - http: 
           path: /{proxy+}
           method: ANY
           private: true
+          cors: true
 
 resources:
   Resources:

@@ -30,12 +30,13 @@ export class PublicationEffects {
 
   clearFiltersAndPublications(publicationFilter) {
     this.store.dispatch(new ClearListPublications());
+    publicationFilter.exclusiveStartKey = null;
     this.store.dispatch(new UpdatePublicationFilter(publicationFilter));
     return this.find(publicationFilter);
   }
 
   find(publicationFilter: PublicationFilter) {
-    if (publicationFilter.authorId){
+    if (publicationFilter.author){
       return this.publicationService.findAllByAuthor(publicationFilter)
       .pipe(
         map(response => this.findAllOK(response))

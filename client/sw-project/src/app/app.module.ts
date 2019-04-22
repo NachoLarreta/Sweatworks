@@ -13,13 +13,16 @@ import { AuthorService } from './services/author.service';
 import { PublicationService } from './services/publication.service';
 import { HomeComponent } from './components/home/home.component';
 import { GenericService } from './services/generic.service';
-import { AuthorsDesktopComponent } from './components/home/authors-desktop/authors-desktop.component';
-import { AuthorsMobileComponent } from './components/home/authors-mobile/authors-mobile.component';
+import { AuthorsComponent } from './components/home/authors/authors.component';
 import { EffectsModule } from '@ngrx/effects';
 import { AuthorEffects } from './store/effects/author.effects';
 import { PublicationsComponent } from './components/home/publications/publications.component';
 import { PublicationEffects } from './store/effects/publication.effects';
 import { SelectButtonModule } from 'primeng/selectbutton';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ChipsComponent } from './components/library/chips/chips.component';
+import { SidebarModule } from 'primeng/sidebar';
+import {ButtonModule} from 'primeng/button';
 
 @NgModule({
   imports: [
@@ -31,14 +34,17 @@ import { SelectButtonModule } from 'primeng/selectbutton';
     !environment.production ? StoreDevtoolsModule.instrument() : [],
     HttpClientModule,
     FormsModule,
-    EffectsModule.forRoot([AuthorEffects, PublicationEffects])
+    ReactiveFormsModule,
+    EffectsModule.forRoot([AuthorEffects, PublicationEffects]),
+    SidebarModule,
+    ButtonModule
   ],
   declarations: [
     AppComponent,
     HomeComponent,
-    AuthorsDesktopComponent,
-    AuthorsMobileComponent,
-    PublicationsComponent
+    AuthorsComponent,
+    PublicationsComponent,
+    ChipsComponent
   ],
   providers: [
     AuthorService,

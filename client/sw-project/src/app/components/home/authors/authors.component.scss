@@ -5,7 +5,7 @@
     display: inline-block;
     position: fixed;
     overflow-y: scroll;
-    width: 83.3333%;
+    width: 16.6667%;
     &::-webkit-scrollbar-track {
         background-color: $scrollbar-track-background-color;
     }
@@ -17,12 +17,17 @@
         background-color: $webkit-scrollbar-thumb-background-color;	
         background-image: $webkit-scrollbar-thumb-background-image;
     }
+    &.container--mobile {
+        width: 82%;
+    }
 }
 
-.publication-item {
-    min-height: 300px;
-}
-
-.input--search {
-    width: 100%;
+.author-item {
+    height: 100px;
+    background-color: #80808040;
+    border-radius: 10px;
+    margin-top: 10px;
+    &:hover {
+        cursor: pointer;
+    }
 }

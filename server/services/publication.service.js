@@ -39,7 +39,7 @@ class PublicationService {
                 ":entity": PUBLICATIONS
             };
             if (search) {
-                filterExpression += "AND contains(#title, :title)";
+                filterExpression += " AND contains(#title, :title)";
                 let attributeName = {
                     '#title': 'title'
                 };
@@ -51,7 +51,7 @@ class PublicationService {
             }
             let params = {
                 TableName: MAIN_TABLE,
-                KeyConditionExpression: "#entity = :publications",
+                KeyConditionExpression: "#entity = :entity",
                 FilterExpression: filterExpression,
                 ExpressionAttributeNames: expressionAttributeNames,
                 ExpressionAttributeValues: expressionAttributeValues,
@@ -107,7 +107,7 @@ class PublicationService {
                 ":publications": PUBLICATIONS
             };
             if (search) {
-                filterExpression += "AND contains(#title, :title)";
+                filterExpression += " AND contains(#title, :title)";
                 let attributeName = {
                     '#title': 'title'
                 };

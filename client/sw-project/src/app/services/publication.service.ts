@@ -46,7 +46,7 @@ export class PublicationService {
         if (publicationFilter.search){
             params = params.append('search', publicationFilter.search);
         }
-        return this.genericService.get(`/publication/author/${publicationFilter.authorId}`, params);
+        return this.genericService.get(`/publication/author/${publicationFilter.author.id}`, params);
     }
 
     delete(id: string): Observable<any> {

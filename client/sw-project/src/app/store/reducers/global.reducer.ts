@@ -27,7 +27,7 @@ export function globalReducer(state = initialState, action: GlobalActions): Glob
         state.publicationList.list = new Array<Publication>();
         return { ...state };
       case GlobalActionTypes.UpdateAuthorFilterExclusiveStartKey:
-        let authorFilter = new AuthorFilter();
+        authorFilter = new AuthorFilter();
         authorFilter.limit = state.authorList.filters.limit;
         authorFilter.orderType = state.authorList.filters.orderType;
         authorFilter.exclusiveStartKey = action.id;
@@ -35,26 +35,28 @@ export function globalReducer(state = initialState, action: GlobalActions): Glob
         return { ...state };
       case GlobalActionTypes.UpdatePublicationFilterExclusiveStartKey:
         publicationFilter = new PublicationFilter();
-        publicationFilter.limit = state.authorList.filters.limit;
-        publicationFilter.orderType = state.authorList.filters.orderType;
+        publicationFilter.limit = state.publicationList.filters.limit;
+        publicationFilter.orderType = state.publicationList.filters.orderType;
         publicationFilter.exclusiveStartKey = action.id;
+        publicationFilter.search = state.publicationList.filters.search;
+        publicationFilter.author = state.publicationList.filters.author; 
         state.publicationList.filters = publicationFilter;   
         return { ...state };
       case GlobalActionTypes.UpdatePublicationFilter:
         publicationFilter = new PublicationFilter();
         publicationFilter.limit = action.publicationFilter.limit
         publicationFilter.orderType = action.publicationFilter.orderType;
-        publicationFilter.exclusiveStartKey = action.publicationFilter.exclusiveStartKey;
+        publicationFilter.exclusiveStartKey = null;
         publicationFilter.search = action.publicationFilter.search;
-        publicationFilter.authorId = action.publicationFilter.authorId;
-        state.publicationList.filters = publicationFilter;   
+        publicationFilter.author = action.publicationFilter.author; 
+        state.publicationList.filters = publicationFilter;
         return { ...state };
       case GlobalActionTypes.ClearListAuthors:
         state.authorList.list = new Array<Author>();
         return { ...state };
       case GlobalActionTypes.UpdateAuthorFilter: 
         authorFilter = new AuthorFilter();
-        authorFilter.exclusiveStartKey = action.authorFilter.exclusiveStartKey;
+        authorFilter.exclusiveStartKey = null;
         authorFilter.limit = action.authorFilter.limit;
         authorFilter.orderType = action.authorFilter.orderType;
         state.authorList.filters = authorFilter;

@@ -1,6 +1,11 @@
 <div class="ui-g">
   <div class="ui-g-12">
-    <p-selectButton [options]="ordersType" [(ngModel)]="orderType"></p-selectButton>
+    <div class="ui-inputgroup" [formGroup]="searchForm">
+        <span class="ui-inputgroup-addon"><i class="pi pi-search"></i></span>
+        <input type="text" formControlName="search" placeholder="Search by title..." class="input--search">         
+    </div>
+    <p-selectButton [options]="ordersType" [(ngModel)]="publicationFilter.orderType" (onChange)="onOrdersTypeChange($event)"></p-selectButton>
+    <chips *ngIf="publicationFilter.author" [label]="publicationFilter?.author?.name" (onRemove)="removeAuthorFilter()"></chips>
   </div>
   <div class="ui-g-12">
     <div class="container" (scroll)="loadAuthorsLazy($event)">
@@ -12,6 +17,7 @@
                     </div>
                     <div class="ui-g-12 ui-md-2">
                       {{publication.date | date}}
+                      {{publication.authorName}} {{publication.authorEmail}}
                     </div>
                 </div>
             </div>

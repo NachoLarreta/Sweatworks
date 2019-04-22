@@ -17,6 +17,7 @@ class AuthorController {
             .catch(error => this.onError(error, res));
     }
     findAllOK(data, res){
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(data.status).json(data);
     }
     async findOne (req, res) {
@@ -26,6 +27,7 @@ class AuthorController {
             .catch(error => this.onError(error, res));
     }
     findOneOK(data, res){
+        res.header("Access-Control-Allow-Origin", "*");
         if (data.status != 200){
             res.status(data.status).json({message: data.message});
         } else {
@@ -43,6 +45,7 @@ class AuthorController {
             .catch(error => this.onError(error, res));
     }
     createOK(data, res){
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(data.status).json({message: "Create OK"});
     }
     async update (req, res) {
@@ -56,6 +59,7 @@ class AuthorController {
             .catch(error => this.onError(error, res));
     }
     updateOK(data, res){
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(data.status).json({message: "Update OK"});
     }
     async delete (req, res) {
@@ -65,6 +69,7 @@ class AuthorController {
             .catch(error => this.onError(error, res));
     }
     deleteOK (data, res) {
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(data.status).json({message: "Delete OK"});
     }
     validate (method) {

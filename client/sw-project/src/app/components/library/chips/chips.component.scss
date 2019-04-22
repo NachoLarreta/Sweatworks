@@ -1,0 +1,16 @@
+@import "../../../../theme/variable.scss";
+
+.chips {
+    display: inline-block;
+    background-color: $colors-primary;
+    border-radius: 100%;
+    padding: 10px 15px 10px;
+    font-weight: bold;
+}
+
+.icon-remove {
+    vertical-align: bottom;
+    &:hover {
+        cursor: pointer;
+    }
+}

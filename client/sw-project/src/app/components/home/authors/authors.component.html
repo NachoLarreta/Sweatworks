@@ -1,0 +1,35 @@
+<p-sidebar class="mobile" [(visible)]="display">
+    <div class="container container--mobile" (scroll)="loadAuthorsLazy($event)">
+        <ng-container *ngFor="let author of authors">
+            <div class="ui-g author-item" (click)="addAuthorFilter(author)">
+                <div class="ui-g-12 ui-md-6">
+                    Name: {{author.name}}
+                </div>
+                <div class="ui-g-12 ui-md-6">
+                    Email: {{author.email}}
+                </div>
+                <div class="ui-g-12">
+                    Date of birth: {{author.dateOfBirth | date}}
+                </div>
+            </div>
+        </ng-container>
+    </div>
+</p-sidebar>
+    
+<button class="mobile" type="button" (click)="display = true" pButton icon="pi pi-arrow-right"></button>
+
+<div class="desktop container" (scroll)="loadAuthorsLazy($event)">
+    <ng-container *ngFor="let author of authors">
+        <div class="ui-g author-item" (click)="addAuthorFilter(author)">
+            <div class="ui-g-12 ui-md-6">
+                Name: {{author.name}}
+            </div>
+            <div class="ui-g-12 ui-md-6">
+                Email: {{author.email}}
+            </div>
+            <div class="ui-g-12">
+                Date of birth: {{author.dateOfBirth | date}}
+            </div>
+        </div>
+    </ng-container>
+</div>

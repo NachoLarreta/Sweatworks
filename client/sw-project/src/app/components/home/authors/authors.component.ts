@@ -7,16 +7,19 @@ import { State } from 'src/app/store/reducers';
 import { LoadListAuthors } from 'src/app/store/actions/author.actions';
 import { AuthorFilter } from 'src/app/models/authorFilter.model';
 import { GlobalStateEnum } from 'src/app/store/models/globalState.enum';
+import { PublicationFilter } from 'src/app/models/publicationFilter.model';
+import { UpdatePublicationFilterAndReloadPublications } from 'src/app/store/actions/publication.actions';
 
 @Component({
-  selector: 'authors-desktop',
-  templateUrl: './authors-desktop.component.html',
-  styleUrls: ['./authors-desktop.component.scss']
+  selector: 'authors',
+  templateUrl: './authors.component.html',
+  styleUrls: ['./authors.component.scss']
 })
-export class AuthorsDesktopComponent implements OnInit, OnDestroy {
+export class AuthorsComponent implements OnInit, OnDestroy {
 
   authors: Array<Author>;
   authorFilter: AuthorFilter;
+  publicationFilter: PublicationFilter;
 
   private ngUnsubscribe: Subject<void>;
 
@@ -28,7 +31,9 @@ export class AuthorsDesktopComponent implements OnInit, OnDestroy {
     this.store.select(GlobalStateEnum.GLOBAL, GlobalStateEnum.AUTHOR_LIST, GlobalStateEnum.LIST)
       .pipe(takeUntil(this.ngUnsubscribe)).subscribe(authors => this.authors = authors);
     this.store.select(GlobalStateEnum.GLOBAL, GlobalStateEnum.AUTHOR_LIST, GlobalStateEnum.FILTERS)
-      .pipe(takeUntil(this.ngUnsubscribe)).subscribe(authorFilter => {debugger; this.authorFilter = authorFilter});
+      .pipe(takeUntil(this.ngUnsubscribe)).subscribe(authorFilter => this.authorFilter = authorFilter);
+    this.store.select(GlobalStateEnum.GLOBAL, GlobalStateEnum.PUBLICATION_LIST, GlobalStateEnum.FILTERS)
+      .pipe(takeUntil(this.ngUnsubscribe)).subscribe(publicationFilter => this.publicationFilter = publicationFilter);
   }
 
   ngOnDestroy(){
@@ -39,10 +44,14 @@ export class AuthorsDesktopComponent implements OnInit, OnDestroy {
   loadAuthorsLazy(event) {
     let pos = (event.target.scrollTop || event.target.scrollTop) + event.target.offsetHeight;
     let max = event.target.scrollHeight-100;
-    debugger;
     if(pos > max && this.authorFilter.exclusiveStartKey != null)   {
       this.store.dispatch(new LoadListAuthors());
     }
+  }
+
+  addAuthorFilter(author) {
+    this.publicationFilter.author = author;
+    this.store.dispatch(new UpdatePublicationFilterAndReloadPublications(this.publicationFilter));
   }
 
 }

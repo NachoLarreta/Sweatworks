@@ -20,6 +20,7 @@ class PublicationController {
             .catch(error => this.onError(error, res));
     }
     findAllByAuthorOK(data, res){
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(data.status).json(data);
     }
     async findAll (req, res) {
@@ -32,6 +33,7 @@ class PublicationController {
             .catch(error => this.onError(error, res));
     }
     findAllOK(data, res){
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(data.status).json(data);
     }
     async findOne (req, res) {
@@ -45,6 +47,7 @@ class PublicationController {
         }
     }
     findOneOK(data, res){
+        res.header("Access-Control-Allow-Origin", "*");
         if (data.status != 200){
             res.status(data.status).json({message: data.message});
         } else {
@@ -62,6 +65,7 @@ class PublicationController {
             .catch(error => this.onError(error, res));
     }
     createOK(data, res){
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(data.status).json({message: "OK"});
     }
     async update (req, res) {
@@ -75,6 +79,7 @@ class PublicationController {
             .catch(error => this.onError(error, res));
     }
     updateOK(data, res){
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(data.status).json({message: "OK"});
     }
     async delete (req, res) {
@@ -88,6 +93,7 @@ class PublicationController {
         }
     }
     deleteOK (data, res) {
+        res.header("Access-Control-Allow-Origin", "*");
         res.status(data.status).json({message: "Delete OK"});
     }
     validate (method) {
