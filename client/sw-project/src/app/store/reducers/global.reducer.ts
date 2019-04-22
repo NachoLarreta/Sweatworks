@@ -1,27 +1,64 @@
 import { GlobalActionTypes } from '../models/globalActionTypes.enum';
 import { GlobalActions } from '../models/globalActions.type';
 import { GlobalState } from '../models/globalState.model';
-import { Author } from 'src/app/models/author.model';
-import { Publication } from 'src/app/models/publication.model';
+import { AuthorList } from 'src/app/models/authorList.model';
+import { PublicationList } from 'src/app/models/publicationList.model';
 import { AuthorFilter } from 'src/app/models/authorFilter.model';
 import { PublicationFilter } from 'src/app/models/publicationFilter.model';
+import { Publication } from 'src/app/models/publication.model';
+import { Author } from 'src/app/models/author.model';
 
 let initialState: GlobalState = {
-  listAuthors: new Array<Author>(),
-  listPublications: new Array<Publication>(),
-  authorFilter: new AuthorFilter(),
-  publicationFilter: new PublicationFilter()
+  authorList: new AuthorList(),
+  publicationList: new PublicationList()
 };
 
 export function globalReducer(state = initialState, action: GlobalActions): GlobalState {
+    let publicationFilter;
+    let authorFilter;
     switch (action.type) {
       case GlobalActionTypes.UpdateListAuthors:
-        let listAuthors = state.listAuthors.concat(action.authors);
-        return { ...state, listAuthors };
+        state.authorList.list = state.authorList.list.concat(action.authors);
+        return { ...state };
       case GlobalActionTypes.UpdateListPublications:
-        return { ...state, listPublications: action.publications };
-      case GlobalActionTypes.UpdateAuthorFilter:
-        return { ...state, authorFilter: action.authorFilter };
+        state.publicationList.list = state.publicationList.list.concat(action.publications);
+        return { ...state };
+      case GlobalActionTypes.ClearListPublications:
+        state.publicationList.list = new Array<Publication>();
+        return { ...state };
+      case GlobalActionTypes.UpdateAuthorFilterExclusiveStartKey:
+        let authorFilter = new AuthorFilter();
+        authorFilter.limit = state.authorList.filters.limit;
+        authorFilter.orderType = state.authorList.filters.orderType;
+        authorFilter.exclusiveStartKey = action.id;
+        state.authorList.filters = authorFilter;   
+        return { ...state };
+      case GlobalActionTypes.UpdatePublicationFilterExclusiveStartKey:
+        publicationFilter = new PublicationFilter();
+        publicationFilter.limit = state.authorList.filters.limit;
+        publicationFilter.orderType = state.authorList.filters.orderType;
+        publicationFilter.exclusiveStartKey = action.id;
+        state.publicationList.filters = publicationFilter;   
+        return { ...state };
+      case GlobalActionTypes.UpdatePublicationFilter:
+        publicationFilter = new PublicationFilter();
+        publicationFilter.limit = action.publicationFilter.limit
+        publicationFilter.orderType = action.publicationFilter.orderType;
+        publicationFilter.exclusiveStartKey = action.publicationFilter.exclusiveStartKey;
+        publicationFilter.search = action.publicationFilter.search;
+        publicationFilter.authorId = action.publicationFilter.authorId;
+        state.publicationList.filters = publicationFilter;   
+        return { ...state };
+      case GlobalActionTypes.ClearListAuthors:
+        state.authorList.list = new Array<Author>();
+        return { ...state };
+      case GlobalActionTypes.UpdateAuthorFilter: 
+        authorFilter = new AuthorFilter();
+        authorFilter.exclusiveStartKey = action.authorFilter.exclusiveStartKey;
+        authorFilter.limit = action.authorFilter.limit;
+        authorFilter.orderType = action.authorFilter.orderType;
+        state.authorList.filters = authorFilter;
+        return { ...state };
       default:
         return state;
     }

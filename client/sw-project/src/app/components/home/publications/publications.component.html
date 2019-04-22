@@ -1,0 +1,24 @@
+<div class="ui-g">
+  <div class="ui-g-12">
+    <p-selectButton [options]="ordersType" [(ngModel)]="orderType"></p-selectButton>
+  </div>
+  <div class="ui-g-12">
+    <div class="container" (scroll)="loadAuthorsLazy($event)">
+        <div class="ui-g publication-item" *ngFor="let publication of publications">
+            <div class="ui-g-12">
+                <div class="ui-g">
+                    <div class="ui-g-12 ui-md-10">
+                      <h1>{{publication.title}}</h1>
+                    </div>
+                    <div class="ui-g-12 ui-md-2">
+                      {{publication.date | date}}
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12">
+                <p>{{publication.body}}</p>
+            </div>
+        </div>
+    </div>
+  </div>
+</div>

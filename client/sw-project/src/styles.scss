@@ -1,3 +1,5 @@
+@import "./theme/variable.scss";
+
 @font-face{
     font-family: 'helvetica';
     font-style: normal;
@@ -42,6 +44,8 @@
 
 body {
     font-family: 'helvetica';
+    color: $colors-light;
+    background-color: $colors-dark;
 }
 
 @media (max-width: 500px) {

@@ -5,6 +5,8 @@ import { takeUntil } from "rxjs/operators";
 import { Store } from '@ngrx/store';
 import { State } from 'src/app/store/reducers';
 import { LoadListAuthors } from 'src/app/store/actions/author.actions';
+import { AuthorFilter } from 'src/app/models/authorFilter.model';
+import { GlobalStateEnum } from 'src/app/store/models/globalState.enum';
 
 @Component({
   selector: 'authors-desktop',
@@ -14,6 +16,7 @@ import { LoadListAuthors } from 'src/app/store/actions/author.actions';
 export class AuthorsDesktopComponent implements OnInit, OnDestroy {
 
   authors: Array<Author>;
+  authorFilter: AuthorFilter;
 
   private ngUnsubscribe: Subject<void>;
 
@@ -22,7 +25,10 @@ export class AuthorsDesktopComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
-    this.store.select("global", "listAuthors").pipe(takeUntil(this.ngUnsubscribe)).subscribe(authors => this.authors = authors);
+    this.store.select(GlobalStateEnum.GLOBAL, GlobalStateEnum.AUTHOR_LIST, GlobalStateEnum.LIST)
+      .pipe(takeUntil(this.ngUnsubscribe)).subscribe(authors => this.authors = authors);
+    this.store.select(GlobalStateEnum.GLOBAL, GlobalStateEnum.AUTHOR_LIST, GlobalStateEnum.FILTERS)
+      .pipe(takeUntil(this.ngUnsubscribe)).subscribe(authorFilter => {debugger; this.authorFilter = authorFilter});
   }
 
   ngOnDestroy(){
@@ -31,11 +37,12 @@ export class AuthorsDesktopComponent implements OnInit, OnDestroy {
   }
 
   loadAuthorsLazy(event) {
+    let pos = (event.target.scrollTop || event.target.scrollTop) + event.target.offsetHeight;
+    let max = event.target.scrollHeight-100;
     debugger;
-    this.store.dispatch(new LoadListAuthors());
-    //event.first = First row offset
-    //event.rows = Number of rows per page
-    //this.lazyCars = load new chunk between first index and (first + rows) last index
+    if(pos > max && this.authorFilter.exclusiveStartKey != null)   {
+      this.store.dispatch(new LoadListAuthors());
+    }
   }
 
 }

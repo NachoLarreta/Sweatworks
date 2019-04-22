@@ -1,5 +1,15 @@
-import { UpdateListAuthors, LoadListAuthors } from '../actions/author.actions';
-import { UpdateListPublications } from '../actions/publication.actions';
-import { UpdateAuthorFilter } from '../actions/filter.action';
+import { UpdateListAuthors, LoadListAuthors, UpdateAuthorFilterExclusiveStartKey, UpdateAuthorFilterAndReloadAuthors, ClearListAuthors, UpdateAuthorFilter } from '../actions/author.actions';
+import { UpdateListPublications, UpdatePublicationFilterExclusiveStartKey, ClearListPublications, UpdatePublicationFilter, LoadListPublications } from '../actions/publication.actions';
 
-export type GlobalActions = UpdateListAuthors | UpdateListPublications | LoadListAuthors | UpdateAuthorFilter;
+export type GlobalActions = 
+    UpdateListAuthors | 
+    UpdateListPublications | 
+    LoadListAuthors | 
+    UpdateAuthorFilterExclusiveStartKey | 
+    UpdatePublicationFilterExclusiveStartKey | 
+    ClearListPublications | 
+    UpdatePublicationFilter | 
+    LoadListPublications |
+    UpdateAuthorFilterAndReloadAuthors |
+    ClearListAuthors |
+    UpdateAuthorFilter;

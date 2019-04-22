@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { HttpParams } from '@angular/common/http';
 import { Publication } from '../models/publication.model';
 import { GenericService } from './generic.service';
+import { PublicationFilter } from '../models/publicationFilter.model';
 
 @Injectable()
 export class PublicationService {
@@ -10,19 +11,19 @@ export class PublicationService {
     constructor(private genericService: GenericService) { 
     }
 
-    findAll(limit?: number, orderType?: string, exclusiveStartKey?: string, search?: string): Observable<any> {
+    findAll(publicationFilter: PublicationFilter): Observable<any> {
         let params = new HttpParams();
-        if (limit){
-            params = params.append('limit', limit.toString());
+        if (publicationFilter.limit){
+            params = params.append('limit', publicationFilter.limit.toString());
         }
-        if (orderType){
-            params = params.append('orderType', orderType);
+        if (publicationFilter.orderType){
+            params = params.append('orderType', publicationFilter.orderType);
         }
-        if (exclusiveStartKey){
-            params = params.append('exclusiveStartKey', exclusiveStartKey);
+        if (publicationFilter.exclusiveStartKey){
+            params = params.append('exclusiveStartKey', publicationFilter.exclusiveStartKey);
         }
-        if (search){
-            params = params.append('search', search);
+        if (publicationFilter.search){
+            params = params.append('search', publicationFilter.search);
         }
         return this.genericService.get("/publication", params);
     }
@@ -31,21 +32,21 @@ export class PublicationService {
         return this.genericService.get(`/publication/find/${id}`);
     }
 
-    findAllByAuthor(authorId: string, limit?: number, orderType?: string, exclusiveStartKey?: string, search?: string) {
+    findAllByAuthor(publicationFilter: PublicationFilter) {
         let params = new HttpParams();
-        if (limit){
-            params = params.append('limit', limit.toString());
+        if (publicationFilter.limit){
+            params = params.append('limit', publicationFilter.limit.toString());
         }
-        if (orderType){
-            params = params.append('orderType', orderType);
+        if (publicationFilter.orderType){
+            params = params.append('orderType', publicationFilter.orderType);
         }
-        if (exclusiveStartKey){
-            params = params.append('exclusiveStartKey', exclusiveStartKey);
+        if (publicationFilter.exclusiveStartKey){
+            params = params.append('exclusiveStartKey', publicationFilter.exclusiveStartKey);
         }
-        if (search){
-            params = params.append('search', search);
+        if (publicationFilter.search){
+            params = params.append('search', publicationFilter.search);
         }
-        return this.genericService.get(`/publication/author/${authorId}`, params);
+        return this.genericService.get(`/publication/author/${publicationFilter.authorId}`, params);
     }
 
     delete(id: string): Observable<any> {

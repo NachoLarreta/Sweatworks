@@ -2,9 +2,9 @@
   "name": "sw-project",
   "version": "1.0.0",
   "scripts": {
-    "proxylocal": "ng serve --configuration=local",
-    "proxydev": "ng serve --configuration=dev",
-    "proxyqa": "ng serve --configuration=qa",
+    "local": "ng serve --configuration=local",
+    "dev": "ng serve --configuration=dev",
+    "qa": "ng serve --configuration=qa",
     "ng": "ng",
     "start": "ng serve --configuration=local",
     "build": "ng build --configuration=production",

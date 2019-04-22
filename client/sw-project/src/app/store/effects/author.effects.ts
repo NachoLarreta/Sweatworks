@@ -5,10 +5,10 @@ import { Observable } from 'rxjs';
 import { Action, Store } from '@ngrx/store';
 import { GlobalActionTypes } from '../models/globalActionTypes.enum';
 import { switchMap, map, concatMap, take } from 'rxjs/operators';
-import { UpdateListAuthors } from '../actions/author.actions';
+import { UpdateListAuthors, UpdateAuthorFilterExclusiveStartKey, ClearListAuthors, UpdateAuthorFilter } from '../actions/author.actions';
 import { State } from '../reducers';
 import { AuthorFilter } from 'src/app/models/authorFilter.model';
-import { UpdateAuthorFilter } from '../actions/filter.action';
+import { GlobalStateEnum } from '../models/globalState.enum';
 
 @Injectable()
 export class AuthorEffects {
@@ -18,22 +18,37 @@ export class AuthorEffects {
   @Effect()
   loadAuthors$: Observable<Action> = this.actions$.pipe(
     ofType(GlobalActionTypes.LoadListAuthors),
-    concatMap(() => {return this.store.select("global", "authorFilter").pipe(take(1))}),
+    concatMap(() => {return this.store.select(GlobalStateEnum.GLOBAL, GlobalStateEnum.AUTHOR_LIST, GlobalStateEnum.FILTERS).pipe(take(1))}),
     switchMap((authorFilter: AuthorFilter) => this.findAll(authorFilter))
   );
+
+  @Effect()
+  updateFiltersAndReloadAuthors$: Observable<Action> = this.actions$.pipe(
+    ofType(GlobalActionTypes.UpdatePublicationFilterAndReloadAuthors),
+    switchMap((action: any) => this.clearFiltersAndAuthors(action.authorFilter))
+  );
+
+  clearFiltersAndAuthors(authorFilter) {
+    this.store.dispatch(new ClearListAuthors());
+    this.store.dispatch(new UpdateAuthorFilter(authorFilter));
+    return this.findAll(authorFilter);
+  }
+
   findAll(authorFilter) {
     return this.authorService.findAll(authorFilter)
       .pipe(
-        map(response => this.findAllOK(authorFilter, response))
+        map(response => this.findAllOK(response))
       )
   }
-  findAllOK(authorFilter, response){
+  
+  findAllOK(response){
+    for (let author of response.authors){
+      author.dateOfBirth = new Date(author.dateOfBirth);
+    }
     if (response.exclusiveStartKey){
-      authorFilter.exclusiveStartKey = response.exclusiveStartKey.id;
-      this.store.dispatch(new UpdateAuthorFilter(authorFilter));
+      this.store.dispatch(new UpdateAuthorFilterExclusiveStartKey(response.exclusiveStartKey.id));
     } else {
-      authorFilter.exclusiveStartKey = null;
-      this.store.dispatch(new UpdateAuthorFilter(authorFilter));
+      this.store.dispatch(new UpdateAuthorFilterExclusiveStartKey(null));
     }
     return new UpdateListAuthors(response.authors);
   }
